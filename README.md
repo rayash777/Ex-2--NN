@@ -1,7 +1,7 @@
-<H3>Name</H3>
-<H3>Register no.</H3>
-<H3>Date</H3>
-<H3>Experiment No. 2 </H3>
+<H3>Name:RAYASH R</H3>
+<H3>Register no:212224230226</H3>
+<H3>Date:30.10.26</H3>
+<H3>Experiment No:2 </H3>
 ## Implementation of Perceptron for Binary Classification
 # AIM:
 To implement a perceptron for classification using Python<BR>
@@ -49,11 +49,104 @@ STEP 9:For ‘N ‘ iterations ,do the following:<BR>
 STEP 10:Plot the error for each iteration <BR>
 STEP 11:Print the accuracy<BR>
 # PROGRAM:
-    ''' Insert your code here '''
+```
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.metrics import ConfusionMatrixDisplay
+ 
+ class SigmoidPerceptron:
+    def __init__(self, learning_rate=0.01, epochs=1000):
+        self.learning_rate = learning_rate
+        self.epochs = epochs
+        self.weights = None
+        self.bias = 0.0
+        self.loss_history = []
+
+   # Load the Breast Cancer dataset
+dataset = load_breast_cancer()
+X = dataset.data
+y = dataset.target
+
+# Display the dataset
+df = pd.DataFrame(X, columns=dataset.feature_names)
+df["Diagnosis"] = y
+print("First five rows of the dataset:")
+print(df.head())
+
+print("\nClass labels:")
+print("0 =", dataset.target_names[0])
+print("1 =", dataset.target_names[1])
+
+# Split the dataset into training and testing data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# Standardize the input features
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Create and train the model
+model = SigmoidPerceptron(learning_rate=0.01, epochs=1000)
+model.fit(X_train, y_train)
+
+# Predict the test results
+y_pred = model.predict(X_test)
+
+# Display model performance
+accuracy = accuracy_score(y_test, y_pred)
+print("\nModel Accuracy: {:.2f}%".format(accuracy * 100))
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+print("\nClassification Report:")
+print(classification_report(
+    y_test, y_pred, target_names=dataset.target_names
+))
+
+# Plot training loss
+plt.figure(figsize=(7, 4))
+plt.plot(model.loss_history)
+plt.title("Training Loss")
+plt.xlabel("Epoch")
+plt.ylabel("Log Loss")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Display confusion matrix
+ConfusionMatrixDisplay.from_predictions(
+    y_test, y_pred, display_labels=dataset.target_names
+)
+plt.title("Binary Classification - Confusion Matrix")
+plt.tight_layout()
+plt.show()
+
+# Predict the class of one new sample from the test set
+sample = X_test[0].reshape(1, -1)
+result = model.predict(sample)[0]
+
+print("\nExample Prediction:")
+print("Predicted Diagnosis:", dataset.target_names[result])
+```
+
 
 # OUTPUT:
+  <img width="372" height="208" alt="image" src="https://github.com/user-attachments/assets/5bc9adee-9654-44d2-a0eb-c1650f276fa9" />
+  
+   <img width="373" height="302" alt="image" src="https://github.com/user-attachments/assets/7846646d-5b11-42bb-ab91-b7181f3b61f3" />
 
-    ''' Show your result '''
+
+    
 
 # RESULT:
  Thus, a single layer perceptron model is implemented using python to classify Iris data set.
